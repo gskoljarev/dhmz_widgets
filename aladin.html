@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ALADIN weather widget</title>
+</head>
+
+<body>
+    <div id="aladin_data"></div>
+</body>
+
+<script>
+    var county = 'Zadarska'
+    var city = 'Ugljan'
+    // site that doesn’t send Access-Control-*
+    var url = `http://prognoza.hr/tri_print.php?id=tri&param=${county}&code=${city}`;
+    const proxyurl = "https://cors-anywhere.herokuapp.com/";
+    var aladin_data = document.getElementById("aladin_data");
+
+    fetch(proxyurl + url) // https://cors-anywhere.herokuapp.com/https://example.com
+        .then((resp) => resp.text())
+        .then(function(data) {
+            new_data = data.replace(/images/, 'http://prognoza.hr/images')
+            new_data = new_data.replace(/metsimboli/g, 'http://prognoza.hr/metsimboli')
+            aladin_data.innerHTML = new_data
+            // change image sizes
+            var imgs = document.getElementsByTagName('img')
+            for (i = 0; i<imgs.length; i++) {
+                imgs[i].width = 30
+                imgs[i].height = 30
+            }
+        })
+        .catch(
+            console.log("Can’t access " + url + " response. Blocked by browser?")
+        )
+</script>
+
+</html>
